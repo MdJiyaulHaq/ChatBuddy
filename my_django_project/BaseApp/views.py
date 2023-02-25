@@ -1,13 +1,17 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 
+
 def home(request):
-  return HttpResponse('home page')
+    return render(request, 'first.html')
+
 
 def room(request):
-  return HttpResponse('Room')
+    return render(request, 'room.html')
+
 
 def members(request):
-  template = loader.get_template('myfirst.html')
-  return HttpResponse(template.render())
+    template = loader.get_template('first.html')
+    return HttpResponse(template.render())

@@ -12,8 +12,7 @@ class Collection(models.Model):
     title = models.CharField(max_length=255)
     featured_product = models.ForeignKey(
         'Product', on_delete=models.SET_NULL, null=True, related_name='+')
-    """ it is not a good habit to write another class in parnthesis
-"""
+    """ it is not a good habit to write another class in parnthesis"""
 
 
 class Product(models.Model):
@@ -27,23 +26,22 @@ class Product(models.Model):
 
 
 class Customer (models.Model):
-    membership_bronze = 'B'
-    membership_silver = 'S'
-    membership_gold = 'G'
-    membership_choices = [
-        (membership_bronze, 'Bronze'),
-        (membership_silver, 'Silver')
-        (membership_gold, 'Gold')
+    MEMBERSHIP_BRONZE = 'B'
+    MEMBERSHIP_SILVER = 'S'
+    MEMBERSHIP_GOLD = 'G'
+
+    MEMBERSHIP_CHOICES = [
+        (MEMBERSHIP_BRONZE, 'Bronze'),
+        (MEMBERSHIP_SILVER, 'Silver'),
+        (MEMBERSHIP_GOLD, 'Gold'),
     ]
     fname = models.CharField(max_length=255)
     lname = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-
-
-membership = models.CharField(
-    max_length=1, choices=membership_choices, default=membership_bronze)
+    membership = models.CharField(
+        max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
 
 class Order(models.Model):
@@ -56,10 +54,10 @@ class Order(models.Model):
     pament_choices = [
         (status_pending, 'Pending'),
         (status_complete, 'Complete'),
-        (status_failed, 'Failed')
+        (status_failed, 'Failed'),
     ]
     payment_status = models.CharField(
-        max_length=1, choices=payment_choices, default=status_pending)
+        max_length=1, choices=pament_choices, default=status_pending)
 
 
 class Address(models.Model):

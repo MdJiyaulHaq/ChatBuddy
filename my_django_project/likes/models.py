@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import *
-from django.contrib.contenttypes import *
+from django.contrib.contenttypes import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 # Create your models here.
 

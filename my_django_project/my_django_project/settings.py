@@ -29,7 +29,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'BaseApp',
-    'debug_toolbar'
+    'debug_toolbar',
+    'likes',
+    'store',
+    'tags'
 ]
 
 INTERNAL_IPS = [

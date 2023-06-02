@@ -11,6 +11,11 @@ class Promotion(models.Model):
     discount = models.FloatField()
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now_add=True)
+    # Product is enclosed in quote to avoid circular dependency
+    # related_name='something other than collection' or a '+' to tell django not to create a reverse relationship
+    featured_product = models.ForeignKey(
+        "Product", on_delete=models.SET_NULL, null=True, related_name="+"
+    )
 
 
 class Product(models.Model):

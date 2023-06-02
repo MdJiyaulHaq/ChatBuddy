@@ -6,6 +6,13 @@ class Collection(models.Model):
     title = models.CharField(max_length=255)
 
 
+class Promotion(models.Model):
+    promo_description = models.CharField(max_length=255)
+    discount = models.FloatField()
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(auto_now_add=True)
+
+
 class Product(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -14,13 +21,14 @@ class Product(models.Model):
     last_update = models.DateTimeField(auto_now=True)
 
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    promotions = models.ManyToManyField(Promotion)
 
 
 class Customer(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    phone = models.CharField()
+    phone = models.CharField(max_length=10)
     birth_date = models.DateField(null=True)
 
     MEMBERSHIP_BRONZE = "B"

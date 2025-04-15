@@ -1,1 +1,1 @@
-restart of django
+This is the Django Project that allows users to communicate with each other over the internet with ease. It's more or less like Platforms such as Slack and Discord.

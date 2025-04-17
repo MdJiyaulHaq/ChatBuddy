@@ -1,7 +1,28 @@
+from django.contrib import messages
+from django.conf import settings
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.contrib.auth import authenticate, login, logout
 from base.forms import RoomForm
 from django.db.models import Q
 from base.models import Room, Topic
+from django.contrib.auth import get_user_model
+
+
+def loginPage(request):
+    page = "login"
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        User = get_user_model()
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request, "Username or password is incorrect")
+
+    context = {"page": page}
+    return render(request, "base/login_register.html", context)
 
 
 def home(request):

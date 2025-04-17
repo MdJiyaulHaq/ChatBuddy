@@ -25,6 +25,12 @@ def loginPage(request):
     return render(request, "base/login_register.html", context)
 
 
+def logoutUser(request):
+    logout(request)
+    messages.info(request, "User was logged out!")
+    return redirect("home")
+
+
 def home(request):
     querry = request.GET.get("q", "")
 

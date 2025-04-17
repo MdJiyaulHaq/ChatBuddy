@@ -3,10 +3,28 @@ from django.conf import settings
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from base.forms import RoomForm
+from core.forms import CustomUserCreationForm
 from django.db.models import Q
 from base.models import Room, Topic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+
+
+def registerPage(request):
+    page = "register"
+    form = CustomUserCreationForm()
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request, "An error occurred during registration")
+    context = {"page": page, "form": form}
+    return render(request, "base/login_register.html", context=context)
 
 
 def loginPage(request):
@@ -16,7 +34,7 @@ def loginPage(request):
 
     page = "login"
     if request.method == "POST":
-        username = request.POST.get("username")
+        username = request.POST.get("username").lower()
         password = request.POST.get("password")
         User = get_user_model()
         user = authenticate(request, username=username, password=password)

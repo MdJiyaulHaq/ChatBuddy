@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from base.forms import RoomForm
 from core.forms import CustomUserCreationForm
 from django.db.models import Q
-from base.models import Room, Topic
+from base.models import Message, Room, Topic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
@@ -153,3 +153,21 @@ def deleteRoom(request, pk):
         return redirect("home")
 
     return render(request, "base/delete_room.html", obj)
+
+
+@login_required(login_url="login")
+def deleteMessage(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+    room_id = message.room.id
+
+    if request.user != message.user:
+        messages.error(request, "You are not allowed to delete this message!")
+        return redirect("room", pk=room_id)
+
+    if request.method == "POST":
+        message.delete()
+        messages.success(request, "Message was deleted successfully!")
+        return redirect("room", pk=room_id)
+
+    context = {"obj": message}
+    return render(request, "base/delete_message.html", context)

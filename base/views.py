@@ -83,7 +83,23 @@ def home(request):
 
 def room(request, pk):
     room = get_object_or_404(Room, pk=pk)
-    context = {"room": room}
+    room_messages = room.message_set.all().order_by("-created")
+    participants = room.participants.all()
+    if request.method == "POST":
+        message_body = request.POST.get("body")
+        if message_body:
+            room.message_set.create(
+                user=request.user,
+                room=room,
+                body=message_body,
+            )
+            room.participants.add(request.user)
+            return redirect("room", pk=room.id)
+    context = {
+        "room": room,
+        "room_messages": room_messages,
+        "participants": participants,
+    }
     return render(request, "base/room.html", context)
 
 

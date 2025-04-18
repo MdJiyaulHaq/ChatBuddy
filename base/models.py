@@ -22,6 +22,11 @@ class Room(models.Model):
     host = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
+    participants = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="participants",
+        blank=True,
+    )
 
     def __str__(self):
         return self.name

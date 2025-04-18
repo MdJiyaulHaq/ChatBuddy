@@ -71,19 +71,21 @@ def home(request):
         rooms = Room.objects.select_related("topic").all()
 
     topics = Topic.objects.all()
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains=querry))
 
     context = {
         "rooms": rooms,
         "topics": topics,
         "room_count": rooms.count(),
         "q": querry,
+        "room_messages": room_messages,
     }
     return render(request, "base/home.html", context)
 
 
 def room(request, pk):
     room = get_object_or_404(Room, pk=pk)
-    room_messages = room.message_set.all().order_by("-created")
+    room_messages = room.message_set.all()
     participants = room.participants.all()
     if request.method == "POST":
         message_body = request.POST.get("body")

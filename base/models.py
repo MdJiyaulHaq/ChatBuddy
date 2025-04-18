@@ -12,6 +12,9 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["-updated", "-created"]
+
 
 class Room(models.Model):
     name = models.CharField(max_length=100)
@@ -44,3 +47,6 @@ class Message(models.Model):
 
     def __str__(self):
         return self.body[0:20]
+
+    class Meta:
+        ordering = ["-updated", "-created"]

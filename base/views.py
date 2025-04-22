@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from base.forms import RoomForm
+from base.forms import RoomForm, UserForm
 from core.forms import CustomUserCreationForm
 from django.db.models import Q
 from base.models import Message, Room, Topic
@@ -210,3 +210,19 @@ def deleteMessage(request, pk):
 
     context = {"obj": message}
     return render(request, "base/delete_message.html", context)
+
+
+@login_required(login_url="login")
+def updateProfile(request):
+    user = request.user
+    form = UserForm(instance=user)
+
+    if request.method == "POST":
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User profile updated successfully!")
+            return redirect("user-profile", pk=user.id)
+
+    context = {"form": form}
+    return render(request, "base/update-profile.html", context)

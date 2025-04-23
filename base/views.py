@@ -34,15 +34,15 @@ def loginPage(request):
 
     page = "login"
     if request.method == "POST":
-        username = request.POST.get("username").lower()
+        email = request.POST.get("email").lower()
         password = request.POST.get("password")
         User = get_user_model()
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect("home")
         else:
-            messages.error(request, "Username or password is incorrect")
+            messages.error(request, "Email or password is incorrect")
 
     context = {"page": page}
     return render(request, "base/login_register.html", context)

@@ -235,3 +235,17 @@ def topicsPage(request):
 
     context = {"topics": topics, "q": querry}
     return render(request, "base/topics.html", context)
+
+def activityPage(request):
+    room_messages = Message.objects.all()
+    querry = request.GET.get("q", "")
+    if querry:
+        room_messages = room_messages.filter(
+            Q(room__topic__name__icontains=querry)
+            | Q(room__name__icontains=querry)
+            | Q(user__username__icontains=querry)
+        )
+
+    context = {"room_messages": room_messages, "q": querry}
+    return render(request, "base/activity.html", context)
+

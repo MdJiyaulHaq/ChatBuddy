@@ -7,3 +7,10 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    avatar = models.ImageField(
+        upload_to="avatars/",
+        default="static/images/avatar.svg",
+        blank=True,
+        null=True,
+    )

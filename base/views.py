@@ -191,7 +191,7 @@ def deleteRoom(request, pk):
         messages.error(request, "You are not allowed to delete this room!")
         return redirect("home")
 
-    return render(request, "base/delete_room.html", obj)
+    return render(request, "base/delete.html", obj)
 
 
 @login_required(login_url="login")
@@ -209,7 +209,7 @@ def deleteMessage(request, pk):
         return redirect("room", pk=room_id)
 
     context = {"obj": message}
-    return render(request, "base/delete_message.html", context)
+    return render(request, "base/delete.html", context)
 
 
 @login_required(login_url="login")

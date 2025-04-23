@@ -70,8 +70,8 @@ def home(request):
     else:
         rooms = Room.objects.select_related("topic").all()[:5]
 
-    topics = Topic.objects.all()[:8]
-    room_messages = Message.objects.filter(Q(room__topic__name__icontains=querry))
+    topics = Topic.objects.all()[:6]
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains=querry))[:5]
 
     context = {
         "rooms": rooms,

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
 
@@ -64,7 +65,11 @@
             <p>Hosted By</p>
             <a href="{% url 'user-profile' room.host.id %}" class="room__author">
               <div class="avatar avatar--small">
-                <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                {% if room.host.avatar %}
+                <img src="{{ room.host.avatar.url }}" />
+                {% else %}
+                <img src="{% static 'images/avatar.svg' %}" />
+                {% endif %}
               </div>
               <span>@{{ room.host.username }}</span>
             </a>
@@ -84,7 +89,11 @@
                 <div class="thread__author">
                   <a href="{% url 'user-profile' message.user.id %}" class="thread__authorInfo">
                     <div class="avatar avatar--small">
-                      <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                      {% if message.user.avatar %}
+                      <img src="{{ message.user.avatar.url }}" />
+                      {% else %}
+                      <img src="{% static 'images/avatar.svg' %}" />
+                      {% endif %}
                     </div>
                     <span>@{{ message.user.username }}</span>
                   </a>
@@ -129,11 +138,15 @@
         {% for participant in participants %}
         <a href="{% url 'user-profile' participant.id %}" class="participant">
           <div class="avatar avatar--medium">
-            <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+            {% if participant.avatar %}
+            <img src="{{ participant.avatar.url }}" />
+            {% else %}
+            <img src="{% static 'images/avatar.svg' %}" />
+            {% endif %}
           </div>
-          <p>
-            {{ participant.first_name }} {{ participant.last_name }}
-            <span>@{{ participant.username }}</span>
+          <p></p>
+          {{ participant.first_name }} {{ participant.last_name }}
+          <span>@{{ participant.username }}</span>
           </p>
         </a>
         {% endfor %}

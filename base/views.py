@@ -229,5 +229,9 @@ def updateProfile(request):
 
 def topicsPage(request):
     topics = Topic.objects.all()
-    context = {"topics": topics}
+    querry = request.GET.get("q", "")
+    if querry:
+        topics = topics.filter(name__icontains=querry)
+
+    context = {"topics": topics, "q": querry}
     return render(request, "base/topics.html", context)

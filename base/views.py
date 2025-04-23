@@ -68,9 +68,9 @@ def home(request):
             )
         )
     else:
-        rooms = Room.objects.select_related("topic").all()
+        rooms = Room.objects.select_related("topic").all()[:5]
 
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[:8]
     room_messages = Message.objects.filter(Q(room__topic__name__icontains=querry))
 
     context = {
@@ -226,3 +226,8 @@ def updateProfile(request):
 
     context = {"form": form}
     return render(request, "base/update-profile.html", context)
+
+def topicsPage(request):
+    topics = Topic.objects.all()
+    context = {"topics": topics}
+    return render(request, "base/topics.html", context)

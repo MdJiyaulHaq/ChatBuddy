@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 mysqlclient = "*"
 django = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

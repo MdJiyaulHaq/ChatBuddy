@@ -5,6 +5,7 @@ from django.db import models
 # Create your models here.
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    bio = models.TextField(null=True, blank=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 

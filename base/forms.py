@@ -28,7 +28,7 @@ class RoomForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ["avatar", "username", "email", "first_name", "last_name"]
+        fields = ["avatar", "username", "bio", "email", "first_name", "last_name"]
         widgets = {
             "first_name": forms.TextInput(
                 attrs={"placeholder": "Enter new first name..."}
@@ -38,4 +38,5 @@ class UserForm(ModelForm):
             ),
             "username": forms.TextInput(attrs={"placeholder": "Enter new username..."}),
             "email": forms.EmailInput(attrs={"placeholder": "Enter new email..."}),
+            "bio": forms.Textarea(attrs={"placeholder": "Tell us about yourself..."})
         }

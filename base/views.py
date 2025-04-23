@@ -8,6 +8,8 @@ from django.db.models import Q
 from base.models import Message, Room, Topic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 def registerPage(request):
@@ -227,6 +229,21 @@ def updateProfile(request):
     context = {"form": form}
     return render(request, "base/update-profile.html", context)
 
+
+@login_required(login_url='login')
+def changePassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('home')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'base/password_change.html', {'form': form})
+
+
 def topicsPage(request):
     topics = Topic.objects.all()
     querry = request.GET.get("q", "")
@@ -235,6 +252,7 @@ def topicsPage(request):
 
     context = {"topics": topics, "q": querry}
     return render(request, "base/topics.html", context)
+
 
 def activityPage(request):
     room_messages = Message.objects.all()

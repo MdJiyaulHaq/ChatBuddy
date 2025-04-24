@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "base",
     "core",
-
     "rest_framework",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -73,6 +73,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ChatBuddy.wsgi.application"
 
+# Channels Configuration
+ASGI_APPLICATION = "ChatBuddy.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

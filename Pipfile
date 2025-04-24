@@ -8,6 +8,7 @@ mysqlclient = "*"
 django = "*"
 djangorestframework = "*"
 pillow = "*"
+channels = "*"
 
 [dev-packages]
 

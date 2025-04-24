@@ -83,7 +83,7 @@
         </div>
         <div class="room__conversation">
           <div class="threads scroll">
-            {% for message in room_messages %}
+            {% for message in room_messages reversed %}
             <div class="thread">
               <div class="thread__top">
                 <div class="thread__author">
@@ -155,8 +155,91 @@
     <!--  End -->
   </div>
 </main>
-<script src="script.js"></script>
 
+<script>
+  // Get room ID from the URL or pass it from the Django view context
+  // Assuming you pass room.id to the template context:
+  const roomId = "{{ room.id }}";
+  const currentUsername = "{{ request.user.username }}"; // Get logged-in username
 
+  const chatSocket = new WebSocket(
+    'ws://' // Use wss:// for secure connections (HTTPS)
+    + window.location.host
+    + '/ws/room/'
+    + roomId
+    + '/'
+  );
+
+  // Select the div where messages will be displayed
+  const messageContainer = document.querySelector('.room__conversation .threads');
+  // Select the input field and the form
+  const messageInput = document.querySelector('.room__message input[name="body"]');
+  const messageForm = document.querySelector('.room__message form');
+
+  chatSocket.onopen = function (e) {
+    console.log('WebSocket connection established');
+  };
+
+  // Called when a message is received from the WebSocket server
+  chatSocket.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+    const message = data.message;
+    const username = data.username;
+    const avatarUrl = data.avatar_url;
+
+    // Create a new message element and append it
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('thread'); // Use your existing CSS class
+
+    // Basic structure - adapt this to match your exact HTML structure for a message
+    // You might want to add avatar, timestamp, delete button logic here too
+    messageElement.innerHTML = `
+            <div class="thread__top">
+                <div class="thread__author">
+                    <a href="#" class="thread__authorInfo"> <div class="avatar avatar--small">
+                            <img src="${avatarUrl}" /> </div>
+                        <span>@${username}</span>
+                    </a>
+                    <span class="thread__date">Just now</span> 
+                </div>
+                </div>
+            <div class="thread__details">
+                ${message}
+            </div>
+        `;
+
+    messageContainer.appendChild(messageElement);
+    // Optional: Scroll to the bottom
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  };
+
+  chatSocket.onclose = function (e) {
+    console.error('Chat socket closed unexpectedly');
+  };
+
+  chatSocket.onerror = function (e) {
+    console.error('WebSocket error:', e);
+  };
+
+  // Send message when form is submitted
+  messageForm.addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent default form submission (page reload)
+    const message = messageInput.value;
+    if (message.trim()) { // Only send if message is not empty
+      chatSocket.send(JSON.stringify({
+        'message': message,
+        'username': currentUsername // Send the username along with the message
+      }));
+      messageInput.value = ''; // Clear the input field
+    }
+  });
+
+  // Focus the input field when the page loads
+  messageInput.focus();
+
+  // Optional: Scroll to bottom on initial load
+  messageContainer.scrollTop = messageContainer.scrollHeight;
+
+</script>
 
 {% endblock %}

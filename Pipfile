@@ -8,7 +8,7 @@ mysqlclient = "*"
 django = "*"
 djangorestframework = "*"
 pillow = "*"
-channels = "*"
+channels = {extras = ["daphne"], version = "*"}
 
 [dev-packages]
 

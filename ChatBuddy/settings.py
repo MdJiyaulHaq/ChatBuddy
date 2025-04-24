@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     "base",
     "core",
     "rest_framework",
-    "channels",
 ]
 
 MIDDLEWARE = [
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "ChatBuddy.wsgi.application"
+# WSGI_APPLICATION = "ChatBuddy.wsgi.application"
 
 # Channels Configuration
 ASGI_APPLICATION = "ChatBuddy.asgi.application"

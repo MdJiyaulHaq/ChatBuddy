@@ -127,7 +127,7 @@ def room(request, pk):
 def userProfile(request, pk):
     user = get_object_or_404(get_user_model(), pk=pk)
     rooms = user.room_set.all()
-    room_messages = user.message_set.all()
+    room_messages = user.message_set.all()[:5]
     topics = Topic.objects.all()
 
     context = {

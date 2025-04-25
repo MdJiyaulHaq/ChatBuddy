@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from channels.layers import get_channel_layer
+from asgiref.sync import sync_to_async, async_to_sync
 
 
 def registerPage(request):
@@ -89,16 +91,31 @@ def room(request, pk):
     room = get_object_or_404(Room, pk=pk)
     room_messages = room.message_set.all()
     participants = room.participants.all()
+
     if request.method == "POST":
-        message_body = request.POST.get("body")
-        if message_body:
-            room.message_set.create(
+        body = request.POST.get("body")
+        uploaded_file = request.FILES.get("file")
+
+        if body or uploaded_file:
+            Message.objects.create(
                 user=request.user,
                 room=room,
-                body=message_body,
+                body=body if body else "",
+                file=uploaded_file if uploaded_file else None,
             )
             room.participants.add(request.user)
+
+            channel_layer = get_channel_layer()
+            event = {
+                "type": "chat_message",
+                "message": body or uploaded_file.name,
+            }
+            async_to_sync(channel_layer.group_send)(f"room_{room.pk}", event)
+
             return redirect("room", pk=room.id)
+        else:
+            messages.error(request, "Cannot send an empty message.")
+
     context = {
         "room": room,
         "room_messages": room_messages,
@@ -230,18 +247,18 @@ def updateProfile(request):
     return render(request, "base/update-profile.html", context)
 
 
-@login_required(login_url='login')
+@login_required(login_url="login")
 def changePassword(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('home')
+            messages.success(request, "Your password was successfully updated!")
+            return redirect("home")
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'base/password_change.html', {'form': form})
+    return render(request, "base/password_change.html", {"form": form})
 
 
 def topicsPage(request):
@@ -266,4 +283,3 @@ def activityPage(request):
 
     context = {"room_messages": room_messages, "q": querry}
     return render(request, "base/activity.html", context)
-

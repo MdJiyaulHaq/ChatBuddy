@@ -115,7 +115,14 @@
 
               </div>
               <div class="thread__details">
+                {% if message.body %}
                 {{ message.body }}
+                {% endif %}
+                {% if message.file %}
+                <div class="message__imageWrapper">
+                  <img src="{{ message.file.url }}" alt="Image" class="message-image" />
+                </div>
+                {% endif %}
               </div>
             </div>
             {% endfor %}
@@ -123,9 +130,18 @@
         </div>
       </div>
       <div class="room__message">
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data" class="room__message">
           {% csrf_token %}
           <input name="body" placeholder="Write your message here..." />
+
+          <!-- File input hidden, label used as trigger -->
+          <input name="file" type="file" id="id_file" />
+          <label for="id_file" title="Attach file">
+            <!-- Use an icon or SVG here -->
+            📎
+          </label>
+
+          <button type="submit">Send</button>
         </form>
       </div>
     </div>
@@ -223,14 +239,23 @@
 
   // Send message when form is submitted
   messageForm.addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent default form submission (page reload)
+    const fileInput = document.querySelector('#id_file');
     const message = messageInput.value;
-    if (message.trim()) { // Only send if message is not empty
+
+    // If a file is selected, allow the form to submit normally (HTTP POST)
+    if (fileInput.files.length > 0) {
+      return; // Don't prevent default – let Django handle the file upload
+    }
+
+    // Otherwise, handle as WebSocket message
+    e.preventDefault();
+
+    if (message.trim()) {
       chatSocket.send(JSON.stringify({
         'message': message,
-        'username': currentUsername // Send the username along with the message
+        'username': currentUsername
       }));
-      messageInput.value = ''; // Clear the input field
+      messageInput.value = '';
     }
   });
 

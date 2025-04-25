@@ -130,7 +130,7 @@
         </div>
       </div>
       <div class="room__message">
-        <form action="" method="POST" enctype="multipart/form-data" class="room__message">
+        <form action="" method="POST" enctype="multipart/form-data" class="room__message-form">
           {% csrf_token %}
           <input name="body" placeholder="Write your message here..." />
 
@@ -140,6 +140,9 @@
             <!-- Use an icon or SVG here -->
             📎
           </label>
+
+          <!-- Image Preview (moved between input and button) -->
+          <div id="file-preview" class="file-preview"></div>
 
           <button type="submit">Send</button>
         </form>
@@ -264,6 +267,26 @@
 
   // Optional: Scroll to bottom on initial load
   messageContainer.scrollTop = messageContainer.scrollHeight;
+
+  // Image preview before sending
+  const fileInput = document.getElementById('id_file');
+  const filePreview = document.getElementById('file-preview');
+
+  fileInput.addEventListener('change', function () {
+    filePreview.innerHTML = ''; // Clear previous preview
+
+    const file = fileInput.files[0];
+    if (file && file.type.startsWith('image/')) {
+      filePreview.style.display = 'block'; // Show the preview
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        filePreview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
 </script>
 

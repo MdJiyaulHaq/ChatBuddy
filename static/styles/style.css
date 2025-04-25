@@ -1238,3 +1238,40 @@ a {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
+.room__message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.room__message-form {
+  flex-grow: 1;
+  /* Allow the form to take up the remaining space */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.file-preview {
+  margin-top: 0.5rem;
+  max-width: 200px;
+  max-height: 200px;
+  overflow: hidden;
+  border: 1px solid var(--color-dark-medium);
+  border-radius: 8px;
+  display: none;
+  /* Initially hide the preview */
+  margin-left: 10px;
+  /* Space between input and preview */
+  margin-right: 10px;
+  /* Space between preview and button */
+}
+
+.file-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}

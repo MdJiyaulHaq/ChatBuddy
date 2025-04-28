@@ -1,1 +1,1 @@
-web: DJANGO_SETTINGS_MODULE=ChatBuddy.settings daphne ChatBuddy.asgi:application --bind 0.0.0.0:$PORT
+web: daphne ChatBuddy.asgi:application --bind 0.0.0.0:$PORT

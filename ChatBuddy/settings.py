@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
+from environ import Env
+
+env = Env()
+Env.read_env()
+
+ENVIRONMENT = env("ENVIRONMENT", default="production")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +28,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-p@ktyk=76+sfy*puy2tb6u&tpw8yi*e&)urdt5zd3=0amq0-=7"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if ENVIRONMENT == "development":
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "ChatBuddy.railway.internal"]
+CSRF_TRUSTED_ORIGINS = ["https://ChatBuddy.railway.internal"]
+
+INTERNAL_IPS = ["127.0.0.1", "localhost"]
 
 # Application definition
 
@@ -75,11 +89,7 @@ TEMPLATES = [
 
 # Channels Configuration
 ASGI_APPLICATION = "ChatBuddy.asgi.application"
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
-}
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -91,6 +101,9 @@ DATABASES = {
     }
 }
 
+POSTGRES_LOCALLY = True
+if ENVIRONMENT == "production" or POSTGRES_LOCALLY == True:
+    DATABASES = {"default": dj_database_url.parse(env("DATABASE_URL"))}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -132,7 +145,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files configuration
-MEDIA_URL = "/media/" 
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type

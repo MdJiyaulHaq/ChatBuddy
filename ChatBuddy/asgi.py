@@ -8,23 +8,28 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
 import os
+
 from django.core.asgi import get_asgi_application
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-from base.routing import websocket_urlpatterns
-from channels.security.websocket import AllowedHostsOriginValidator
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ChatBuddy.settings")
 
+# Initialize Django's settings and app registry *before* importing code that depends on it
 django_asgi_app = get_asgi_application()
 
-from base import routing
+# Import your Channels routing and middleware *after* Django setup
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from channels.security.websocket import AllowedHostsOriginValidator
+
+# Import your specific websocket URL patterns
+from base.routing import websocket_urlpatterns
+
 
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(routing.websocket_urlpatterns))
+            AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
         ),
     }
 )

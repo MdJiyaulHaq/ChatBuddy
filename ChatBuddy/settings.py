@@ -15,6 +15,8 @@ import os
 import dj_database_url
 from environ import Env
 
+DJANGO_SETTINGS_MODULE = "ChatBuddy.settings"
+
 env = Env()
 Env.read_env()
 

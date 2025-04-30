@@ -7,13 +7,14 @@ name = "pypi"
 mysqlclient = "*"
 django = "*"
 djangorestframework = "*"
-pillow = "*"
 channels = {extras = ["daphne"], version = "*"}
 django-environ = "*"
 dj-database-url = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
+django-cloudinary-storage = "*"
+pillow = "*"
 
 [dev-packages]
 

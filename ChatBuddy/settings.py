@@ -40,7 +40,7 @@ else:
 
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "chatbuddy-prod.up.railway.app"]
-CSRF_TRUSTED_ORIGINS = ["https://ChatBuddy.railway.internal"]
+CSRF_TRUSTED_ORIGINS = ["https://chatbuddy-prod.up.railway.app"]
 
 INTERNAL_IPS = ["127.0.0.1", "localhost"]
 
